@@ -1,6 +1,6 @@
 /*
  * #%L
- * Alfresco Benchmark Manager
+ * Alfresco Benchmark Rest Api
  * %%
  * Copyright (C) 2005 - 2018 Alfresco Software Limited
  * %%
@@ -50,9 +50,20 @@ public abstract class RestTest extends AbstractEventProcessor implements Applica
 	protected DataUser dataUser;
 	protected DataContent dataContent;
 	protected DataSite dataSite;
+	protected String alfrescoAdminUsername;
+	protected String alfrescoAdminPassword;
 
 	public RestTest(String baseUrl) {
 		this.baseUrl = baseUrl;
+	}
+	
+	
+	public void setAlfrescoAdminUsername(String alfrescoAdminUsername) {
+		this.alfrescoAdminUsername = alfrescoAdminUsername;
+	}
+
+	public void setAlfrescoAdminPassword(String alfrescoAdminPassword) {
+		this.alfrescoAdminPassword = alfrescoAdminPassword;
 	}
 
 	private void initializeRestClient() throws MalformedURLException {

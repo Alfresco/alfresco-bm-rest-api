@@ -27,33 +27,19 @@
 	</bean>
 
 	<!-- -->
-	<!-- Support Service -->
-	<!-- -->
-	<bean id="userDataService" class="org.alfresco.bm.user.UserDataServiceImpl">
-		<constructor-arg name="db" ref="testMongoDB" />
-		<constructor-arg name="collection" value="${users.collectionName}" />
-	</bean>
-
-	<bean id="authenticationDetailsProvider"
-		class="org.alfresco.bm.http.UserDataAutheticationDetailsProvider">
-		<constructor-arg name="userDataService" ref="userDataService" />
-		<constructor-arg name="adminUserName" value="${alfresco.adminUser}" />
-		<constructor-arg name="adminPassword" value="${alfresco.adminPwd}" />
-	</bean>
-
-
-	<!-- -->
 	<!-- EventProcessors -->
 	<!-- -->
 	<bean id="event.base.rest.api" abstract="true" parent="event.base">
 		<constructor-arg name="baseUrl" value="${alfresco.url}" />
+		<property name="alfrescoAdminUsername" value="${alfresco.adminUser}"/>
+        <property name="alfrescoAdminPassword" value="${alfresco.adminPwd}"/>
 	</bean>
 
 	<bean id="event.start" class="org.alfresco.bm.rest.RestRequestsTest"
 		parent="event.base">
 		<constructor-arg name="eventName" value="createNode" />
 		<constructor-arg name="numberOfRestRequests" value="${rest.numberOfRestRequests}" />
-		<constructor-arg name="creationDelay" value="${user.signupDelay}" />
+		<constructor-arg name="creationDelay" value="${rest.requestDelay}" />
 	</bean>
 
 	<bean id="event.createNode" class="org.alfresco.bm.rest.CreateNodeTest"

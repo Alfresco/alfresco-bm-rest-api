@@ -1,6 +1,6 @@
 /*
  * #%L
- * Alfresco Benchmark Manager
+ * Alfresco Benchmark Rest Api
  * %%
  * Copyright (C) 2005 - 2018 Alfresco Software Limited
  * %%
@@ -28,6 +28,7 @@ package org.alfresco.bm.rest;
 import org.alfresco.bm.driver.event.Event;
 import org.alfresco.rest.model.RestNodeBodyModel;
 import org.alfresco.utility.model.ContentModel;
+import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang.RandomStringUtils;
 
 public class CreateNodeTest extends RestTest {
@@ -38,7 +39,7 @@ public class CreateNodeTest extends RestTest {
 
 	@Override
 	protected void prepareData() throws Exception {
-		restClient.authenticateUser(dataContent.getAdminUser());
+		restClient.authenticateUser(new UserModel(alfrescoAdminUsername, alfrescoAdminPassword));
 	}
 
 	@Override
