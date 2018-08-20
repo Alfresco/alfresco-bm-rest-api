@@ -8,7 +8,6 @@
         <groupId>org.alfresco</groupId>
         <artifactId>alfresco-bm-manager-project</artifactId>
         <version>3.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
     
 	<artifactId>alfresco-bm-rest-api</artifactId>
@@ -19,18 +18,20 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<server.version>3.0.0-SNAPSHOT</server.version>
 		<junit.version>4.11</junit.version>
+        <dependency.server.version>3.0.0-SNAPSHOT</dependency.server.version>
 	</properties>
 
 	 <dependencies>
         <dependency>
             <groupId>org.alfresco</groupId>
             <artifactId>alfresco-bm-manager</artifactId>
-            <version>${server.version}</version>
+            <version>${dependency.server.version}</version>
+            <scope>classes</scope>
         </dependency>
         <dependency>
             <groupId>org.alfresco</groupId>
             <artifactId>alfresco-bm-util</artifactId>
-            <version>${server.version}</version>
+            <version>${dependency.server.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

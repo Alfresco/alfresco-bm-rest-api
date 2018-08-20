@@ -4,55 +4,44 @@
  * %%
  * Copyright (C) 2005 - 2018 Alfresco Software Limited
  * %%
- * This file is part of the Alfresco software. 
- * If the software was purchased under a paid Alfresco license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the Alfresco software.
+ * If the software was purchased under a paid Alfresco license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * Alfresco is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Alfresco is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
 package org.alfresco.bm;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.alfresco.bm.manager.api.v1.ResultsRestAPI;
-import org.alfresco.bm.manager.api.v1.TestRestAPI;
-import org.alfresco.bm.driver.event.Event;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import org.alfresco.bm.common.EventRecord;
-import org.alfresco.bm.driver.event.EventService;
 import org.alfresco.bm.common.ResultService;
-import org.alfresco.bm.common.util.log.LogService;
-import org.alfresco.bm.common.util.log.LogService.LogLevel;
-import org.alfresco.bm.driver.session.SessionService;
-import org.alfresco.bm.common.TestConstants;
-import org.alfresco.bm.common.spring.TestRunServicesCache;
 import org.alfresco.bm.common.TestService;
 import org.alfresco.bm.common.mongo.MongoTestDAO;
+import org.alfresco.bm.common.session.SessionService;
+import org.alfresco.bm.common.spring.TestRunServicesCache;
 import org.alfresco.bm.common.util.junit.tools.BMTestRunner;
 import org.alfresco.bm.common.util.junit.tools.BMTestRunnerListener;
 import org.alfresco.bm.common.util.junit.tools.BMTestRunnerListenerAdaptor;
+import org.alfresco.bm.common.util.log.LogService;
+import org.alfresco.bm.common.util.log.LogService.LogLevel;
+import org.alfresco.bm.driver.event.Event;
+import org.alfresco.bm.driver.event.EventService;
+import org.alfresco.bm.manager.api.v1.ResultsRestAPI;
+import org.alfresco.bm.manager.api.v1.TestRestAPI;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
@@ -61,8 +50,17 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.springframework.context.ApplicationContext;
 
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * temporary, in order to run driver tests you need to add all the properties from the app.properties as system variables in order to run
@@ -75,15 +73,15 @@ import com.mongodb.DBObject;
  * Sample on how to run your test against a local Mongo instance.
  * This does not replace running the test in the full BM environment,
  * but allows initial debugging to take place.
- * 
+ *
  * @author Derek Hulley
  * @since 1.0
  */
 @RunWith(JUnit4.class)
-public class BM000XTest extends BMTestRunnerListenerAdaptor
+public class ResponsivenessBMDriverTest extends BMTestRunnerListenerAdaptor
 {
-    private static Log logger = LogFactory.getLog(BM000XTest.class);
-    
+    private static Log logger = LogFactory.getLog(ResponsivenessBMDriverTest.class);
+
     @Test
     public void runQuick() throws Exception
     {
@@ -103,7 +101,7 @@ public class BM000XTest extends BMTestRunnerListenerAdaptor
         });
         runner.run(null, null, props);
     }
-    
+
     @Test
     public void runComplete() throws Exception
     {
@@ -117,7 +115,7 @@ public class BM000XTest extends BMTestRunnerListenerAdaptor
      * is discarded.
      * <p/>
      * Check that the exact number of results are available, as expected
-     * 
+     *
      * @see BMTestRunnerListener
      */
     @Override
@@ -142,8 +140,8 @@ public class BM000XTest extends BMTestRunnerListenerAdaptor
             List<EventRecord> eventRecord = resultService.getResults(eventName, 0, 1);
             logger.info("   " + eventRecord);
             assertFalse(
-                    "An event was created that has no available processor or producer: " + eventRecord + ".  Use the TerminateEventProducer to absorb events.",
-                    eventRecord.toString().contains("processedBy=unknown"));
+                "An event was created that has no available processor or producer: " + eventRecord + ".  Use the TerminateEventProducer to absorb events.",
+                eventRecord.toString().contains("processedBy=unknown"));
         }
 
         // One successful START event
@@ -153,32 +151,27 @@ public class BM000XTest extends BMTestRunnerListenerAdaptor
         {
             Assert.fail(Event.EVENT_NAME_START + " failed: \n" + results.toString());
         }
-        
+
         /*
+         * TODO needs to be fixed
          * 'start' = 1 result
-         * 'scheduleProcesses' = 2 results
-         * 'executeProcess' = 200 results
-         * Sessions = 200
+         * 'createNode' = 200 results
+         * Sessions = 200 ???
          */
-        assertEquals("Incorrect number of event names: " + eventNames, 3, eventNames.size());
-        assertEquals(
-                "Incorrect number of events: " + "scheduleProcesses",
-                2, resultService.countResultsByEventName("scheduleProcesses"));
-        assertEquals(
-                "Incorrect number of events: " + "executeProcess",
-                200, resultService.countResultsByEventName("executeProcess"));
+        assertEquals("Incorrect number of event names: " + eventNames, 2, eventNames.size());
+        assertEquals("Incorrect number of events: " + "createNode", 200, resultService.countResultsByEventName("createNode"));
         // 203 events in total
-        assertEquals("Incorrect number of results.", 203, resultService.countResults());
+        assertEquals("Incorrect number of results.", 200, resultService.countResults());
         // Check that we got the failure rate correct ~30%
         long failures = resultService.countResultsByFailure();
         assertEquals("Failure rate out of bounds. ", 60.0, (double) failures, 15.0);
-        
+
         // Get the summary CSV results for the time period and check some of the values
         String summary = BMTestRunner.getResultsCSV(resultsAPI, test, run);
         logger.info(summary);
         assertTrue(summary.contains(",,scheduleProcesses,     2,"));
         assertTrue(summary.contains(",,executeProcess,   200,"));
-        
+
         // Get the chart results and check
         String chartData = resultsAPI.getTimeSeriesResults(test, run, 0L, "seconds", 1, 10, true);
         if (logger.isDebugEnabled())
@@ -187,11 +180,11 @@ public class BM000XTest extends BMTestRunnerListenerAdaptor
         }
         // Check that we have 10.0 processes per second; across 10s, we should get 100 events
         assertTrue("Expected 10 processes per second.", chartData.contains("\"num\" : 100 , \"numPerSec\" : 10.0"));
-        
+
         // Check the session data
         assertEquals("All sessions should be closed: ", 0L, sessionService.getActiveSessionsCount());
         assertEquals("All sessions should be used: ", 200L, sessionService.getAllSessionsCount());
-        
+
         // Check the log messages
         DBCursor logs = logService.getLogs(null, test, run, LogLevel.INFO, null, null, 0, 500);
         try
