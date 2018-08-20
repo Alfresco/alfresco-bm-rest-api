@@ -1,5 +1,5 @@
-### Alfresco Benchmark Rest Api
-V1 (and later) ACS REST API load tests
+### Alfresco Benchmark Rest Api Responsiveness
+Driver for checking the responsiveness of the Alfresco server using the V1 REST APIs
 
 This project provides the creation of multiple scenarios in Alfresco, using V1 (and later) rest api. 
 This is aimed at measuring the responsiveness of the system through REST V1 APIs scenarios.
