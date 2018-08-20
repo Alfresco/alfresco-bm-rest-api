@@ -53,6 +53,11 @@
             <version>5.2.0-12-SNAPSHOT</version>
         </dependency>
 
+        <!-- TODO remove this dependency -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

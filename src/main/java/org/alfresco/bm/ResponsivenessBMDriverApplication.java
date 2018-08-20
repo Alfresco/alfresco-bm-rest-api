@@ -1,6 +1,6 @@
 /*
  * #%L
- * Alfresco Benchmark Manager
+ * Alfresco Benchmark Rest Api
  * %%
  * Copyright (C) 2005 - 2018 Alfresco Software Limited
  * %%
