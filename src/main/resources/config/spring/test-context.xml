@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- alfresco-benchmark-bm-sample: [Project description] -->
+
+    <!-- Import any application contexts for test runs -->
+    <import resource="classpath:config/spring/test-common-context.xml"/>
+
+    <!-- -->
+    <!-- Reporting -->
+    <!-- -->
+    <!-- The CompletionEstimator looking at the process count results -->
+    <bean id="completionEstimator"
+          class="org.alfresco.bm.driver.test.EventCountCompletionEstimator">
+        <constructor-arg name="eventService" ref="eventService"/>
+        <constructor-arg name="resultService" ref="resultService"/>
+        <constructor-arg name="eventName" value="start"/>
+        <constructor-arg name="eventCount" value="${rest.numberOfRestRequests}"/>
+    </bean>
+
+    <!-- -->
+    <!-- EventProcessors -->
+    <!-- -->
+    <bean id="event.base.rest.api" abstract="true" parent="event.base">
+        <constructor-arg name="baseUrl" value="${alfresco.url}"/>
+        <property name="alfrescoAdminUsername" value="${alfresco.adminUser}"/>
+        <property name="alfrescoAdminPassword" value="${alfresco.adminPwd}"/>
+    </bean>
+
+    <bean id="event.start" class="org.alfresco.bm.rest.RestRequestsTest"
+          parent="event.base">
+        <constructor-arg name="eventName" value="createNode"/>
+        <constructor-arg name="numberOfRestRequests" value="${rest.numberOfRestRequests}"/>
+        <constructor-arg name="creationDelay" value="${rest.requestDelay}"/>
+    </bean>
+
+    <bean id="event.createNode" class="org.alfresco.bm.rest.CreateNodeTest"
+          parent="event.base.rest.api">
+    </bean>
+
+
+    <bean id="producer.responsivenessChecked"
+          class="org.alfresco.bm.driver.event.producer.TerminateEventProducer"
+          parent="producer.base"/>
+
+</beans>
