@@ -6,8 +6,8 @@
 
     <parent>
         <groupId>org.alfresco</groupId>
-        <artifactId>alfresco-bm-manager-project</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <artifactId>alfresco-super-pom</artifactId>
+        <version>9</version>
     </parent>
 
     <artifactId>alfresco-bm-rest-api</artifactId>
@@ -16,20 +16,33 @@
 
     <properties>
         <junit.version>4.11</junit.version>
+        <dependency.spring-boot.version>1.5.12.RELEASE</dependency.spring-boot.version>
         <dependency.server.version>3.0.0-SNAPSHOT</dependency.server.version>
         <dependency.fabric8.version>3.5.37</dependency.fabric8.version>
         <image.name>alfresco/alfresco-bm-rest-api</image.name>
         <image.tag>latest</image.tag>
         <image.registry>quay.io</image.registry>
         <docker.project_version>${project.version}</docker.project_version>
-	</properties>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${dependency.spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <groupId>org.alfresco</groupId>
             <artifactId>alfresco-bm-manager</artifactId>
             <version>${dependency.server.version}</version>
-            <scope>classes</scope>
+            <classifier>classes</classifier>
         </dependency>
         <dependency>
             <groupId>org.alfresco</groupId>
@@ -64,6 +77,24 @@
             <artifactId>h2</artifactId>
         </dependency>
     </dependencies>
+
+    <scm>
+        <connection>scm:git:git@github.com:Alfresco/alfresco-bm-rest-api.git</connection>
+        <developerConnection>scm:git:git@github.com:Alfresco/alfresco-bm-rest-api.git</developerConnection>
+        <url>https://github.com/Alfresco/alfresco-bm-rest-api</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>alfresco-internal</id>
+            <url>https://artifacts.alfresco.com/nexus/content/repositories/internal-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>alfresco-internal-snapshots</id>
+            <url>https://artifacts.alfresco.com/nexus/content/repositories/internal-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
         <resources>
