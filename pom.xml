@@ -10,13 +10,13 @@
     </parent>
 
     <artifactId>alfresco-bm-rest-api</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
         <junit.version>4.11</junit.version>
         <dependency.spring-boot.version>1.5.12.RELEASE</dependency.spring-boot.version>
-        <dependency.server.version>3.0.0-SNAPSHOT</dependency.server.version>
+        <dependency.server.version>3.0.0</dependency.server.version>
         <dependency.fabric8.version>3.5.37</dependency.fabric8.version>
         <image.name>alfresco/alfresco-bm-rest-api</image.name>
         <image.tag>latest</image.tag>
