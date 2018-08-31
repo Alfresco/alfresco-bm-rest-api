@@ -4,6 +4,8 @@ Driver for checking the responsiveness of the Alfresco server using the V1 REST 
 This project provides the creation of multiple scenarios in Alfresco, using V1 (and later) rest api. 
 This is aimed at measuring the responsiveness of the system through REST V1 APIs scenarios.
 
+Documentation for the benchmark drivers can be found [here](https://github.com/Alfresco/alfresco-bm-manager/tree/master/docs/bm-driver)
+
 ### Get the code
 
 Git:
@@ -82,6 +84,9 @@ A compatible version of the Benchmark Manager is required, running at port 9080.
     At any time - usually when the test run completes - click through on the test run.  
     Click the download button and open the CSV file in a spreadsheet.
 ```
+
+### Release bm-rest-api project
+Please use [this guide](https://github.com/Alfresco/alfresco-bm-manager/tree/master/docs/ReleaseProcess.md) for the release process.
 
 ### Contributing guide
 Please use [this guide](CONTRIBUTING.md) to make a contribution to the project.
