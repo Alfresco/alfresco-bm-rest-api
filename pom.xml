@@ -16,7 +16,7 @@
     <properties>
         <junit.version>4.11</junit.version>
         <dependency.spring-boot.version>1.5.12.RELEASE</dependency.spring-boot.version>
-        <dependency.server.version>3.0.1</dependency.server.version>
+        <dependency.server.version>3.0.2</dependency.server.version>
         <dependency.fabric8.version>3.5.37</dependency.fabric8.version>
         <image.name>alfresco/alfresco-bm-rest-api</image.name>
         <image.tag>latest</image.tag>

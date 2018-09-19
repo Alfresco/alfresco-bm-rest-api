@@ -34,15 +34,10 @@ import org.apache.commons.lang.RandomStringUtils;
 public class CreateNodeTest extends RestTest
 {
 
-    public CreateNodeTest(String baseUrl)
-    {
-        super(baseUrl);
-    }
-
     @Override
     protected void prepareData() throws Exception
     {
-        restClient.authenticateUser(new UserModel(alfrescoAdminUsername, alfrescoAdminPassword));
+        getRestWrapper().authenticateUser(new UserModel(alfrescoAdminUsername, alfrescoAdminPassword));
     }
 
     @Override
@@ -52,8 +47,7 @@ public class CreateNodeTest extends RestTest
         node.setName(RandomStringUtils.randomAlphanumeric(8));
         node.setNodeType("cm:folder");
 
-        restClient.withParams("autoRename=true").withCoreAPI().usingNode(ContentModel.my()).createNode(node);
-
+        getRestWrapper().withParams("autoRename=true").withCoreAPI().usingNode(ContentModel.my()).createNode(node);
     }
 
 }
