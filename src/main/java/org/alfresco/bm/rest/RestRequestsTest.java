@@ -25,14 +25,14 @@
  */
 package org.alfresco.bm.rest;
 
-import org.alfresco.bm.common.EventResult;
-import org.alfresco.bm.driver.event.AbstractEventProcessor;
-import org.alfresco.bm.driver.event.Event;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestRequestsTest extends AbstractEventProcessor
+import org.alfresco.bm.AbstractRestApiEventProcessor;
+import org.alfresco.bm.common.EventResult;
+import org.alfresco.bm.driver.event.Event;
+
+public class RestRequestsTest extends AbstractRestApiEventProcessor
 {
 
     private String eventName;
@@ -63,5 +63,4 @@ public class RestRequestsTest extends AbstractEventProcessor
 
         return new EventResult(event.getName(), nextEvents);
     }
-
 }

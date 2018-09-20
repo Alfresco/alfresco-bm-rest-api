@@ -25,39 +25,20 @@
  */
 package org.alfresco.bm.rest;
 
-import com.jayway.restassured.RestAssured;
+import org.alfresco.bm.AbstractRestApiEventProcessor;
 import org.alfresco.bm.common.EventResult;
-import org.alfresco.bm.driver.event.AbstractEventProcessor;
 import org.alfresco.bm.driver.event.Event;
 import org.alfresco.rest.core.RestWrapper;
-import org.alfresco.utility.data.DataContent;
-import org.alfresco.utility.data.DataSite;
-import org.alfresco.utility.data.DataUser;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpStatus;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-public abstract class RestTest extends AbstractEventProcessor implements ApplicationContextAware
+public abstract class RestTest extends AbstractRestApiEventProcessor
 {
-
-    private ApplicationContext context;
     protected RestWrapper restClient;
-    private String baseUrl;
-    protected DataUser dataUser;
-    protected DataContent dataContent;
-    protected DataSite dataSite;
     protected String alfrescoAdminUsername;
     protected String alfrescoAdminPassword;
-
-    public RestTest(String baseUrl)
-    {
-        this.baseUrl = baseUrl;
-    }
-
+    
     public void setAlfrescoAdminUsername(String alfrescoAdminUsername)
     {
         this.alfrescoAdminUsername = alfrescoAdminUsername;
@@ -68,22 +49,6 @@ public abstract class RestTest extends AbstractEventProcessor implements Applica
         this.alfrescoAdminPassword = alfrescoAdminPassword;
     }
 
-    private void initializeRestClient() throws MalformedURLException
-    {
-        dataUser = (DataUser) this.context.getBean("dataUser");
-        restClient = (RestWrapper) this.context.getBean("restWrapper");
-        dataContent = (DataContent) this.context.getBean("dataContent");
-        dataSite = (DataSite) this.context.getBean("dataSite");
-
-        URL url = new URL(baseUrl);
-
-        RestAssured.baseURI = url.getProtocol() + "://" + url.getHost();
-        RestAssured.port = url.getPort();
-        restClient.configureRequestSpec().setBaseUri(RestAssured.baseURI).setPort(RestAssured.port);
-
-        restClient.configureRequestSpec().setBaseUri(baseUrl);
-    }
-
     protected abstract void prepareData() throws Exception;
 
     protected abstract void restCall(Event event) throws Exception;
@@ -91,10 +56,7 @@ public abstract class RestTest extends AbstractEventProcessor implements Applica
     @Override
     protected EventResult processEvent(Event event) throws Exception
     {
-
         super.suspendTimer();
-
-        initializeRestClient();
 
         prepareData();
 
@@ -102,8 +64,7 @@ public abstract class RestTest extends AbstractEventProcessor implements Applica
         restCall(event);
         super.suspendTimer();
 
-        return processStatusCode(event.getName(), restClient.getStatusCode());
-
+        return processStatusCode(event.getName(), getRestWrapper().getStatusCode());
     }
 
     @Override
@@ -118,29 +79,24 @@ public abstract class RestTest extends AbstractEventProcessor implements Applica
         {
             return markAsSucces(eventName);
         }
-        else if (HttpStatus.OK.toString().equals(statusCode))
+        if (HttpStatus.OK.toString().equals(statusCode))
         {
             return markAsSucces(eventName);
         }
-        else if (HttpStatus.CONFLICT.toString().equals(statusCode))
+        if (HttpStatus.CONFLICT.toString().equals(statusCode))
         {
             return markAsFailure(eventName);
         }
-        else
-        {
-            return markAsFailure(eventName);
-        }
-
+        return markAsFailure(eventName);
     }
 
     private EventResult markAsFailure(String eventName)
     {
-        return new EventResult("Event execution failed:" + eventName, false);
+        return new EventResult("Event execution failed: " + eventName, false);
     }
 
     private EventResult markAsSucces(String eventName)
     {
-        return new EventResult("Event execution succed:" + eventName, true);
+        return new EventResult("Event execution succeeded: " + eventName, true);
     }
-
 }
