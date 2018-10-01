@@ -25,29 +25,15 @@
  */
 package org.alfresco.bm.rest;
 
-import org.alfresco.bm.driver.event.Event;
-import org.alfresco.rest.model.RestNodeBodyModel;
-import org.alfresco.utility.model.ContentModel;
-import org.alfresco.utility.model.UserModel;
-import org.apache.commons.lang.RandomStringUtils;
-
-public class CreateNodeTest extends RestTest
+/**
+ * Constants used as keys for data passed from event to event during a rest-api responsiveness scenario.
+ * 
+ */
+public interface SiteContextConstants 
 {
-
-    @Override
-    protected void prepareData() throws Exception
-    {
-        getRestWrapper().authenticateUser(new UserModel(alfrescoAdminUsername, alfrescoAdminPassword));
-    }
-
-    @Override
-    protected void restCall(Event event) throws Exception
-    {
-        RestNodeBodyModel node = new RestNodeBodyModel();
-        node.setName(RandomStringUtils.randomAlphanumeric(8));
-        node.setNodeType("cm:folder");
-
-        getRestWrapper().withParams("autoRename=true").withCoreAPI().usingNode(ContentModel.my()).createNode(node);
-    }
-
+    public static final String SITE_ID = "siteId";
+    
+    public static final String SITE_MEMBER = "siteMember";
+    
+    public static final String NODE_ID = "nodeId";
 }
