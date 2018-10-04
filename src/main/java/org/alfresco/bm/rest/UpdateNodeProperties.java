@@ -25,6 +25,8 @@
  */
 package org.alfresco.bm.rest;
 
+import java.nio.charset.StandardCharsets;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -35,8 +37,10 @@ import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.core.RestWrapper;
 import org.alfresco.rest.model.RestNodeModel;
+import org.alfresco.textgen.TextGenerator;
 import org.alfresco.utility.model.FileModel;
 import org.alfresco.utility.model.UserModel;
+import org.apache.commons.io.IOUtils;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
@@ -98,9 +102,14 @@ public class UpdateNodeProperties extends RestTest
         FileModel file = new FileModel();
         file.setNodeRef(nodeRef);
         
+        long seed = (long) (Math.random() * 1000L);
+        TextGenerator tg = new TextGenerator( "alfresco/textgen/lexicon-stem-en.txt");
+        String title = IOUtils.toString(tg.getInputStream(seed, 30), StandardCharsets.UTF_8); 
+        String description = IOUtils.toString(tg.getInputStream(seed, 60, "K100", "K10"), StandardCharsets.UTF_8); 
+        
         JsonObjectBuilder properties = Json.createObjectBuilder()
-                                         .add("cm:title", "The Title")
-                                         .add("cm:description", "Desc updated by rest-api bm driver at " + System.currentTimeMillis());
+                                         .add("cm:title", title)
+                                         .add("cm:description", description);
         JsonObject propertiesBody = Json.createObjectBuilder().add("properties", properties ).build();
         String body = propertiesBody.toString();
         
@@ -120,8 +129,9 @@ public class UpdateNodeProperties extends RestTest
         
         Event nextEvent = new Event(eventNodePropertiesUpdated, eventData);
 
-        DBObject resultData = BasicDBObjectBuilder.start().add("msg", "Properties for " + node.getName() + " updated.")
-                .add("status: ", getRestWrapper().getStatusCode()).get();
+        DBObject resultData = BasicDBObjectBuilder.start()
+        		                   .add("msg", "Properties for " + node.getName() + " updated.")
+                                   .add("status", getRestWrapper().getStatusCode()).get();
 
         return processStatusCode(resultData, getRestWrapper().getStatusCode(), nextEvent);
     }

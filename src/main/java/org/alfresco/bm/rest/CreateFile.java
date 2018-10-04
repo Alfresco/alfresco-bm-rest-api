@@ -92,7 +92,6 @@ public class CreateFile extends RestTest
         String member = (String) dataObj.get(SiteContextConstants.SITE_MEMBER);
         
         //Get the user for the selected site member
-        
         UserData userdata = userDataService.findUserByUsername(member);
         if (userdata == null)
         {
@@ -128,8 +127,9 @@ public class CreateFile extends RestTest
         
         Event nextEvent = new Event(eventFileContentCreated, eventData);
 
-        DBObject resultData = BasicDBObjectBuilder.start().add("msg", "New file " + newFileNode.getName() )
-                .add("status: ", getRestWrapper().getStatusCode()).get();
+        DBObject resultData = BasicDBObjectBuilder.start()
+        		                  .add("msg", "New file " + newFileNode.getName() )
+                                  .add("status", getRestWrapper().getStatusCode()).get();
 
         return processStatusCode(resultData, getRestWrapper().getStatusCode(), nextEvent);
     }

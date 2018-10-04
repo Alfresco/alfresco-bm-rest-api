@@ -101,8 +101,9 @@ public class DeleteFile extends RestTest
         // Build next event
         Event nextEvent = new Event(eventNodeDeleted, null);
 
-        DBObject resultData = BasicDBObjectBuilder.start().add("msg", "Node deleted: " + nodeRef)
-                                          .add("status: ", getRestWrapper().getStatusCode()).get();
+        DBObject resultData = BasicDBObjectBuilder.start()
+        		                     .add("msg", "Node deleted: " + nodeRef)
+                                     .add("status", getRestWrapper().getStatusCode()).get();
 
         return processStatusCode(resultData, getRestWrapper().getStatusCode(), nextEvent);
     }

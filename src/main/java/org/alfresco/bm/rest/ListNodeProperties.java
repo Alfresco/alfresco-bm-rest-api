@@ -70,7 +70,7 @@ public class ListNodeProperties extends RestTest
     @Override
     protected EventResult processEvent(Event event) throws Exception 
     {
-super.suspendTimer();
+        super.suspendTimer();
         
         DBObject dataObj = (DBObject) event.getData();
         if (dataObj == null)
@@ -99,11 +99,11 @@ super.suspendTimer();
         file.setNodeRef(nodeRef);
         
         super.resumeTimer();
-        // actual rest calls
+        
         restWrapper.authenticateUser(userModel).configureRequestSpec()
                    .addFormParam("include", "isLink,path,allowableOperations,isLocked");
         
-         RestNodeModel node = restWrapper.withCoreAPI().usingNode(file).getNode();
+        RestNodeModel node = restWrapper.withCoreAPI().usingNode(file).getNode();
 
         super.suspendTimer();
         
@@ -115,8 +115,9 @@ super.suspendTimer();
         
         Event nextEvent = new Event(eventNodePropertiesListed, eventData);
 
-        DBObject resultData = BasicDBObjectBuilder.start().add("msg", "Properties for file " + node.getName() )
-                .add("status: ", getRestWrapper().getStatusCode()).get();
+        DBObject resultData = BasicDBObjectBuilder.start().
+        		                     add("msg", "Properties for file " + node.getName())
+                                    .add("status", getRestWrapper().getStatusCode()).get();
 
         return processStatusCode(resultData, getRestWrapper().getStatusCode(), nextEvent);
     }
