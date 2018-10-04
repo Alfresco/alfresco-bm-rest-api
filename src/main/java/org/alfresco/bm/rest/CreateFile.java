@@ -26,6 +26,7 @@
 package org.alfresco.bm.rest;
 
 import java.io.File;
+import java.util.UUID;
 
 import org.alfresco.bm.common.EventResult;
 import org.alfresco.bm.driver.event.Event;
@@ -111,10 +112,10 @@ public class CreateFile extends RestTest
             return new EventResult("Failure: No test files exist for upload: " + testFileService, false);
         }
         
+        String newFileName = UUID.randomUUID().toString() + "-" + file.getName();
+        
         super.resumeTimer();
-        restWrapper.authenticateUser(userModel).configureRequestSpec()
-               .addMultiPart("filedata", file)
-               .addFormParam("autoRename", true);
+        restWrapper.authenticateUser(userModel).configureRequestSpec().addMultiPart("filedata", new FakeNameFile(newFileName, file));
         RestNodeModel newFileNode = restWrapper.withCoreAPI().usingResource(destinationFolder).createNode();
         
         super.suspendTimer();
@@ -134,4 +135,23 @@ public class CreateFile extends RestTest
         return processStatusCode(resultData, getRestWrapper().getStatusCode(), nextEvent);
     }
 
+    /**
+     * Hack class to return whatever name we want for a file
+     */
+    class FakeNameFile extends File
+    {
+        private String fakeName;
+
+        FakeNameFile(String newFakeName, File theFileToFake)
+        {
+            super(theFileToFake.toURI());
+            this.fakeName = newFakeName;
+        }
+
+        @Override
+        public String getName()
+        {
+            return fakeName;
+        }
+    }
 }
