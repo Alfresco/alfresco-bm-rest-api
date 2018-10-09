@@ -70,6 +70,12 @@
             <version>5.2.0.12</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.alfresco</groupId>
+            <artifactId>alfresco-text-gen</artifactId>
+            <version>1.4</version>
+        </dependency>
+        
         <!-- TODO remove this dependency -->
         <dependency>
             <groupId>com.h2database</groupId>

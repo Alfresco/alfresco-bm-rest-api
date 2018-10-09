@@ -25,17 +25,19 @@
  */
 package org.alfresco.bm.rest;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.alfresco.bm.AbstractRestApiEventProcessor;
 import org.alfresco.bm.common.EventResult;
 import org.alfresco.bm.driver.event.Event;
-import org.alfresco.rest.core.RestWrapper;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 
+/**
+ * Base for the Rest API event processors, default properties are set (like the alfresco url), knows to processes status codes of REST calls.
+ */
 public abstract class RestTest extends AbstractRestApiEventProcessor
 {
-    protected RestWrapper restClient;
     protected String alfrescoAdminUsername;
     protected String alfrescoAdminPassword;
     
@@ -49,54 +51,35 @@ public abstract class RestTest extends AbstractRestApiEventProcessor
         this.alfrescoAdminPassword = alfrescoAdminPassword;
     }
 
-    protected abstract void prepareData() throws Exception;
-
-    protected abstract void restCall(Event event) throws Exception;
-
-    @Override
-    protected EventResult processEvent(Event event) throws Exception
+    protected EventResult processStatusCode(Object resultData, String statusCode, Event nextEvent)
     {
-        super.suspendTimer();
-
-        prepareData();
-
-        super.resumeTimer();
-        restCall(event);
-        super.suspendTimer();
-
-        return processStatusCode(event.getName(), getRestWrapper().getStatusCode());
+        return processStatusCode(resultData, statusCode, Collections.singletonList(nextEvent));
     }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
+    
+    protected EventResult processStatusCode(Object resultData, String statusCode, List<Event> nextEvents)
     {
-        this.context = applicationContext;
-    }
-
-    private EventResult processStatusCode(String eventName, String statusCode)
-    {
-        if (HttpStatus.CREATED.toString().equals(statusCode))
+        if (HttpStatus.CREATED.toString().equals(statusCode) ||
+            HttpStatus.OK.toString().equals(statusCode) ||
+            HttpStatus.NO_CONTENT.toString().equals(statusCode))
         {
-            return markAsSucces(eventName);
-        }
-        if (HttpStatus.OK.toString().equals(statusCode))
-        {
-            return markAsSucces(eventName);
+            return markAsSucces(resultData, nextEvents);
         }
         if (HttpStatus.CONFLICT.toString().equals(statusCode))
         {
-            return markAsFailure(eventName);
+            return markAsFailure(resultData);
         }
-        return markAsFailure(eventName);
+        return markAsFailure(resultData);
     }
 
-    private EventResult markAsFailure(String eventName)
+    private EventResult markAsFailure(Object resultData)
     {
-        return new EventResult("Event execution failed: " + eventName, false);
+        return new EventResult("Failure: " + resultData, false);
     }
 
-    private EventResult markAsSucces(String eventName)
+    private EventResult markAsSucces(Object resultData, List<Event> nextEvents)
     {
-        return new EventResult("Event execution succeeded: " + eventName, true);
+        nextEvents = nextEvents == null ? Collections.emptyList() : nextEvents;
+        
+        return new EventResult(resultData, nextEvents, true);
     }
 }

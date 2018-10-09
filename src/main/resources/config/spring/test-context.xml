@@ -7,39 +7,90 @@
     <!-- Import any application contexts for test runs -->
     <import resource="classpath:config/spring/test-common-context.xml"/>
 
-    <!-- -->
+    <!--                 -->
+    <!-- Data Services   -->
+    <!--                 -->
+    
+    <bean id="siteDataService" class="org.alfresco.bm.site.SiteDataServiceImpl">
+       <constructor-arg name="db" ref="testMongoDB" />
+       <constructor-arg name="sites" value="${mirror.sites}" />
+       <constructor-arg name="siteMembers" value="${mirror.siteMembers}" />
+    </bean>
+  
+    <bean id="userDataService" class="org.alfresco.bm.user.UserDataServiceImpl">
+        <constructor-arg name="db" ref="testMongoDB" />
+        <constructor-arg name="collection" value="${mirror.users}" />
+    </bean>
+    
+    <!--                 -->
+    <!-- Test Files      -->
+    <!--                 -->
+
+    <bean id="fileDataService" class="org.alfresco.bm.driver.file.FileDataServiceImpl">
+        <constructor-arg name="db" ref="testMongoDB" />
+        <constructor-arg name="collection" value="${files.collection.name}" />
+    </bean>
+    <bean id="testFileService" class="org.alfresco.bm.driver.file.FtpTestFileService">
+        <constructor-arg name="fileDataService" ref="fileDataService" />
+        <constructor-arg name="localDir" value="${files.cache.dir}" />
+        <constructor-arg name="ftpHost" value="${files.ftp.host}" />
+        <constructor-arg name="ftpPort" value="${files.ftp.port}" />
+        <constructor-arg name="ftpUsername" value="${files.ftp.username}" />
+        <constructor-arg name="ftpPassword" value="${files.ftp.password}" />
+        <constructor-arg name="ftpPath" value="${files.ftp.path}" />
+    </bean>
+  
+    <!--           -->
     <!-- Reporting -->
-    <!-- -->
+    <!--           -->
+    
     <!-- The CompletionEstimator looking at the process count results -->
     <bean id="completionEstimator" class="org.alfresco.bm.driver.test.EventCountCompletionEstimator">
         <constructor-arg name="eventService" ref="eventService"/>
         <constructor-arg name="resultService" ref="resultService"/>
         <constructor-arg name="eventName" value="start"/>
-        <constructor-arg name="eventCount" value="${rest.numberOfRestRequests}"/>
+        <constructor-arg name="eventCount" value="${load.sessionCount}"/>
     </bean>
 
-    <!-- -->
+    <!--                 -->
     <!-- EventProcessors -->
-    <!-- -->
+    <!--                 -->
     <bean id="event.base.rest.api" abstract="true" parent="event.base">
         <property name="baseUrl" value="${alfresco.url}"/>
         <property name="alfrescoAdminUsername" value="${alfresco.adminUser}"/>
         <property name="alfrescoAdminPassword" value="${alfresco.adminPwd}"/>
     </bean>
-
-    <bean id="event.start" class="org.alfresco.bm.rest.RestRequestsTest"
-          parent="event.base">
-        <constructor-arg name="eventName" value="createNode"/>
-        <constructor-arg name="numberOfRestRequests" value="${rest.numberOfRestRequests}"/>
-        <constructor-arg name="creationDelay" value="${rest.requestDelay}"/>
+    
+        <bean id="event.start" class="org.alfresco.bm.driver.event.RenameEventProcessor" parent="event.base">
+        <constructor-arg name="outputEventName" value="prepareRandomSite"/>
+        <property name="chart" value="false"/>
     </bean>
 
-    <bean id="event.createNode" class="org.alfresco.bm.rest.CreateNodeTest"
-          parent="event.base.rest.api">
-    </bean>
+    <bean id="event.prepareRandomSite" class="org.alfresco.bm.rest.PrepareRandomSiteEventProcessor" parent="event.base">
+        <constructor-arg name="siteDataService" ref="siteDataService"/>
+        <constructor-arg name="outputEventName" value="rest-collab.startScenario" />
+        <constructor-arg name="timeBetweenEvents" value="${load.sessionDelay}" />
+        <constructor-arg name="outputEventCount" value="${load.sessionCount}" />
+        <property name="eventNameRaiseEvents" value="prepareRandomSite" />
+        <property name="batchSize" value="${load.sessionBatchSize}" />
+        <property name="chart" value="false"/>
+    </bean>      
+        
+    <!--                 -->
+    <!-- Scenarios       -->
+    <!--                 -->
 
-    <bean id="producer.responsivenessChecked"
-          class="org.alfresco.bm.driver.event.producer.TerminateEventProducer"
-          parent="producer.base"/>
+    <!-- Scenarios are defined in their own files.  -->
+    <import resource="classpath:config/spring/collaborative-scenario-01-context.xml" />
+    <import resource="classpath:config/spring/collaborative-scenario-02-context.xml" />
+    
+    <bean id="producer.rest-collab.startScenario" class="org.alfresco.bm.driver.event.producer.RandomRedirectEventProducer" parent="producer.base" >
+        <constructor-arg name="eventWeights">
+            <list>
+                <ref bean="rest-collab.eventWeight.scenario01" />
+                <ref bean="rest-collab.eventWeight.scenario02" />
+            </list>
+        </constructor-arg>
+    </bean>
 
 </beans>

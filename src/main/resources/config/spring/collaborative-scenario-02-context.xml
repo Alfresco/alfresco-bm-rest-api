@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <!-- Scenario section 2: 
+        Create a file in My Files
+        Get file properties
+        Update properties - e.g. file title, description
+        Delete file
+    --> 
+   
+   <bean id="rest-collab.eventWeight.scenario02" class="org.alfresco.bm.driver.event.EventWeight">
+        <constructor-arg name="eventName" value="rest-collab.scenario.02.createFile" />
+        <constructor-arg name="weights" value="${weight.read},${weight.scenario-02}" />
+   </bean>
+    
+   <bean id="event.rest-collab.scenario.02.createFile" class="org.alfresco.bm.rest.CreateFile" parent="event.base.rest.api" >
+        <property name="eventFileContentCreated" value="rest-collab.scenario.02.listNodeProperties" />
+        <property name="userDataService" ref="userDataService" />
+        <property name="testFileService" ref="testFileService" />
+   </bean>
+   
+     <bean id="event.rest-collab.scenario.02.listNodeProperties" class="org.alfresco.bm.rest.ListNodeProperties" parent="event.base.rest.api" >
+        <property name="eventNodePropertiesListed" value="rest-collab.scenario.02.updateNodeProperties" />
+        <property name="userDataService" ref="userDataService" />
+   </bean>
+   
+      <bean id="event.rest-collab.scenario.02.updateNodeProperties" class="org.alfresco.bm.rest.UpdateNodeProperties" parent="event.base.rest.api" >
+        <property name="eventNodePropertiesUpdated" value="rest-collab.scenario.02.deleteFile" />
+        <property name="userDataService" ref="userDataService" />
+   </bean>
+   
+   <bean id="event.rest-collab.scenario.02.deleteFile" class="org.alfresco.bm.rest.DeleteFile" parent="event.base.rest.api" >
+        <property name="eventNodeDeleted" value="rest-collab.scenario.02.done" />
+        <property name="userDataService" ref="userDataService" />
+   </bean>
+   
+  <bean id="producer.rest-collab.scenario.02.done" class="org.alfresco.bm.driver.event.producer.TerminateEventProducer" parent="producer.base" />
+  
+</beans>
