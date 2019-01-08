@@ -5,6 +5,7 @@ import org.alfresco.bm.driver.event.Event;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.core.RestWrapper;
+import org.alfresco.rest.search.Pagination;
 import org.alfresco.rest.search.RestRequestQueryModel;
 import org.alfresco.rest.search.SearchRequest;
 import org.alfresco.rest.search.SearchResponse;
@@ -17,7 +18,7 @@ import com.mongodb.DBObject;
 /**
  * <b>INPUT:   </b>A site id, a random site member of the site and the text/query to search for <br/>
  * <b>ACTIONS: </b>Search for the text/query on the random site<br/>
- * <b>OUTPUT:  </b>List all the documents that match the search<br/>
+ * <b>OUTPUT:  </b>List all the documents that match the search query<br/>
  * 
  * @author Cristina Diaconu
  *
@@ -33,6 +34,10 @@ public class SearchContent extends RestTest
 	private String searchQuery;
 	
 	private String searchLanguage;
+	
+	private int maxItems;
+	
+	private int skipCount;
 
 	
 	public SearchContent() 
@@ -58,6 +63,16 @@ public class SearchContent extends RestTest
 	public void setSearchLanguage(String searchLanguage) 
 	{
 		this.searchLanguage = searchLanguage;
+	}
+	
+	public void setMaxItems(int maxItems) 
+	{
+		this.maxItems = maxItems;
+	}
+	
+	public void setSkipCount(int skipCount) 
+	{
+		this.skipCount = skipCount;
 	}
 
 	@Override
@@ -94,9 +109,14 @@ public class SearchContent extends RestTest
         RestRequestQueryModel model = new RestRequestQueryModel();
         model.setQuery(searchQuery);
         model.setLanguage(searchLanguage);
+        
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(model);
-        
+        Pagination pagination = new Pagination();
+        pagination.setMaxItems(maxItems);
+        pagination.setSkipCount(skipCount); 
+        searchRequest.setPaging(pagination);
+            
         SearchResponse container = restWrapper.authenticateUser(userModel).withSearchAPI().search(searchRequest);
       
         int count = container.getPagination() != null && container.getPagination().getTotalItems() != null ? 

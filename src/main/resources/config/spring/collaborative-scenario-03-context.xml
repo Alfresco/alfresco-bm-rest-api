@@ -14,8 +14,10 @@
    <bean id="event.rest-collab.scenario.03.search" class="org.alfresco.bm.rest.SearchContent" parent="event.base.rest.api" >
         <property name="eventSearchContent" value="rest-collab.scenario.03.done" />
         <property name="userDataService" ref="userDataService" />
-        <property name="searchQuery" value="${weight.scenario-03}" />
-        <property name="searchLanguage" value="${weight.search.language}" />
+        <property name="searchQuery" value="${details.search.2.searchquery}" />
+        <property name="searchLanguage" value="${details.search.1.language}" />
+        <property name="maxItems" value="${details.search.3.paging.maxItems}" />
+        <property name="skipCount" value="${details.search.4.paging.skipCount}" />
    </bean>
   
   <bean id="producer.rest-collab.scenario.03.done" class="org.alfresco.bm.driver.event.producer.TerminateEventProducer" parent="producer.base" />
