@@ -119,8 +119,7 @@ public class SearchContent extends RestTest
             
         SearchResponse container = restWrapper.authenticateUser(userModel).withSearchAPI().search(searchRequest);
       
-        int count = container.getPagination() != null && container.getPagination().getTotalItems() != null ? 
-        		container.getPagination().getTotalItems() : 0;
+        int count = container.getPagination() != null ? container.getPagination().getCount() : 0;
         
         super.suspendTimer();
         
