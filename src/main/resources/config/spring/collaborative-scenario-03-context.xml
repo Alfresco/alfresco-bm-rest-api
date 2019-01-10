@@ -8,7 +8,7 @@
    
    <bean id="rest-collab.eventWeight.scenario03" class="org.alfresco.bm.driver.event.EventWeight">
         <constructor-arg name="eventName" value="rest-collab.scenario.03.search" />
-        <constructor-arg name="weights" value="${weight.search}, ${weight.search}" />
+        <constructor-arg name="weights" value="${weight.search}" />
    </bean>
     
    <bean id="event.rest-collab.scenario.03.search" class="org.alfresco.bm.rest.SearchContent" parent="event.base.rest.api" >
