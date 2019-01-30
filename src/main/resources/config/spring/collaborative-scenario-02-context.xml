@@ -13,7 +13,7 @@
    
    <bean id="rest-collab.eventWeight.scenario02" class="org.alfresco.bm.driver.event.EventWeight">
         <constructor-arg name="eventName" value="rest-collab.scenario.02.createFile" />
-        <constructor-arg name="weights" value="${weight.read},${weight.scenario-02}" />
+        <constructor-arg name="weights" value="${weight.4.read},${weight.2.scenario-02}" />
    </bean>
     
    <bean id="event.rest-collab.scenario.02.createFile" class="org.alfresco.bm.rest.CreateFile" parent="event.base.rest.api" >

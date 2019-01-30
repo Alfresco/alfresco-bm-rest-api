@@ -8,16 +8,24 @@
    
    <bean id="rest-collab.eventWeight.scenario03" class="org.alfresco.bm.driver.event.EventWeight">
         <constructor-arg name="eventName" value="rest-collab.scenario.03.search" />
-        <constructor-arg name="weights" value="${weight.search}, ${weight.search}" />
+        <constructor-arg name="weights" value="${weight.3.search}, ${weight.3.search}" />
    </bean>
     
    <bean id="event.rest-collab.scenario.03.search" class="org.alfresco.bm.rest.SearchContent" parent="event.base.rest.api" >
         <property name="eventSearchContent" value="rest-collab.scenario.03.done" />
         <property name="userDataService" ref="userDataService" />
-        <property name="searchQuery" value="${details.search.2.searchquery}" />
-        <property name="searchLanguage" value="${details.search.1.language}" />
-        <property name="maxItems" value="${details.search.3.paging.maxItems}" />
-        <property name="skipCount" value="${details.search.4.paging.skipCount}" />
+        <property name="searchQuery" value="${details.search.1.searchquery}" />
+        <property name="searchLanguage" value="${details.search.2.language}" />
+        <property name="maxItems" value="${details.search.3.paging.1.maxItems}" />
+        <property name="skipCount" value="${details.search.3.paging.2.skipCount}" />
+        
+        <property name="rangeField" value="${details.search.4.range.1.field}" />
+        <property name="rangeStart" value="${details.search.4.range.2.start}" />
+        <property name="rangeStop" value="${details.search.4.range.3.stop}" />
+        <property name="rangeGap" value="${details.search.4.range.4.gap}" />
+        <property name="rangeHardend" value="${details.search.4.range.5.hardend}" />
+        
+        <property name="facetQueries" value="${details.search.5.facetQueries}" />
    </bean>
   
   <bean id="producer.rest-collab.scenario.03.done" class="org.alfresco.bm.driver.event.producer.TerminateEventProducer" parent="producer.base" />
