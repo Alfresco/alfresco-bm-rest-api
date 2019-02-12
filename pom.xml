@@ -42,6 +42,7 @@
             <groupId>org.alfresco</groupId>
             <artifactId>alfresco-bm-manager</artifactId>
             <version>${dependency.server.version}</version>
+            <version>3.0.3-SNAPSHOT</version>
             <classifier>classes</classifier>
         </dependency>
         <dependency>
