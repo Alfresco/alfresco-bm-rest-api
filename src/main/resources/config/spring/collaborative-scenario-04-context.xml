@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <!-- Scenario section 4: SQL Search simple documents --> 
+   
+   <bean id="rest-collab.eventWeight.scenario04" class="org.alfresco.bm.driver.event.EventWeight">
+        <constructor-arg name="eventName" value="rest-collab.scenario.04.search" />
+        <constructor-arg name="weights" value="${weight.sqlsearch}, ${weight.sqlsearch}" />
+   </bean>
+   
+   <bean id="event.rest-collab.scenario.04.search" class="org.alfresco.bm.rest.SQLSearchContent" parent="event.base.rest.api" >
+        <property name="eventSearchContent" value="rest-collab.scenario.04.done" />
+        <property name="userDataService" ref="userDataService" />
+        <property name="searchQuery" value="${details.sqlsearch.query}" />
+        <property name="format" value="${details.sqlsearch.format}" />
+        <property name="includeMetadata" value="${details.sqlsearch.includeMetadata}" />
+        <property name="timezone" value="${details.sqlsearch.timezone}" />
+   </bean>
+  
+  <bean id="producer.rest-collab.scenario.04.done" class="org.alfresco.bm.driver.event.producer.TerminateEventProducer" parent="producer.base" />
+   
+</beans>

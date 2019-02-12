@@ -84,6 +84,7 @@
     <import resource="classpath:config/spring/collaborative-scenario-01-context.xml" />
     <import resource="classpath:config/spring/collaborative-scenario-02-context.xml" />
     <import resource="classpath:config/spring/collaborative-scenario-03-context.xml" />
+    <import resource="classpath:config/spring/collaborative-scenario-04-context.xml" />
     
     <bean id="producer.rest-collab.startScenario" class="org.alfresco.bm.driver.event.producer.RandomRedirectEventProducer" parent="producer.base" >
         <constructor-arg name="eventWeights">
@@ -91,6 +92,7 @@
                 <ref bean="rest-collab.eventWeight.scenario01" />
                 <ref bean="rest-collab.eventWeight.scenario02" />
                 <ref bean="rest-collab.eventWeight.scenario03" />
+                <ref bean="rest-collab.eventWeight.scenario04" />
             </list>
         </constructor-arg>
     </bean>
