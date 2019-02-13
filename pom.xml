@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>alfresco-bm-rest-api</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.1patched-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
