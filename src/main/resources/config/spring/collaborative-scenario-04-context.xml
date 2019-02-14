@@ -6,15 +6,17 @@
 
    <!-- Scenario section 4: SQL Search simple documents --> 
    
-   <bean id="rest-collab.eventWeight.scenario04" class="org.alfresco.bm.driver.event.EventWeight">
+   <bean id="rest-collab.eventWeight.scenario04" class="org.alfresco.bm.rest.CustomSearchEventWeight">
         <constructor-arg name="eventName" value="rest-collab.scenario.04.search" />
-        <constructor-arg name="weights" value="${weight.sqlsearch}, ${weight.sqlsearch}" />
+        <constructor-arg name="weights" value="${weight.search}, ${weight.search}" />
+        <property name="searchType" value="${weight.searchType}" />
    </bean>
    
-   <bean id="event.rest-collab.scenario.04.search" class="org.alfresco.bm.rest.SQLSearchContent" parent="event.base.rest.api" >
+   <bean id="event.rest-collab.scenario.04.search" class="org.alfresco.bm.rest.SearchContent" parent="event.base.rest.api" >
         <property name="eventSearchContent" value="rest-collab.scenario.04.done" />
         <property name="userDataService" ref="userDataService" />
         <property name="searchQuery" value="${details.sqlsearch.query}" />
+        <property name="searchType" value="${weight.searchType}" />
         <property name="format" value="${details.sqlsearch.format}" />
         <property name="includeMetadata" value="${details.sqlsearch.includeMetadata}" />
         <property name="timezone" value="${details.sqlsearch.timezone}" />
