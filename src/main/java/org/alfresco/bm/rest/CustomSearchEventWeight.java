@@ -8,7 +8,7 @@ import static org.alfresco.bm.rest.SiteContextConstants.INSIGHT_ENGINE_SEARCH_TY
 import org.alfresco.bm.driver.event.EventWeight;
 
 /**
- * Data representing relative weight for given event names.
+ * Data representing relative weight for given event name.
  * 
  * @author Cristina Diaconu
  *

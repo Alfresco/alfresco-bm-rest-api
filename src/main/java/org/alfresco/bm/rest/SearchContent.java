@@ -40,11 +40,11 @@ public class SearchContent extends RestTest {
 	private String eventSearchContent;
 	private UserDataService userDataService;
 
-	// search common parameters
+	// search common properties
 	private String searchQuery;
 	private String searchType;
 
-	// Search Services parameters
+	// Search Services properties
 	private String searchLanguage;
 	private int maxItems;
 	private int skipCount;
@@ -58,12 +58,11 @@ public class SearchContent extends RestTest {
 
 	private String facetQueries;
 
-	// Insight Engine Search parameters
+	// Insight Engine Search properties
 	private String format;
 	private boolean includeMetadata;
 	private String timezone;
 
-	
 	public SearchContent() {
 		this.eventSearchContent = EVENT_SEARCH_CONTENT;
 	}
@@ -180,7 +179,7 @@ public class SearchContent extends RestTest {
 		// do the actual search
 		SearchResponse container = getRestWrapper().authenticateUser(userModel).withSearchAPI().search(searchRequest);
 
-		return container.getPagination() != null ? container.getPagination().getCount() : 0;
+		return container != null && container.getPagination() != null ? container.getPagination().getCount() : 0;
 	}
 
 	// Perform a SQL Search using Insight Engine
@@ -218,7 +217,7 @@ public class SearchContent extends RestTest {
 		pagination.setSkipCount(skipCount);
 		searchRequest.setPaging(pagination);
 
-		// add Range parameters
+		// add Range properties
 		searchRequest.setRanges(getRanges());
 
 		// add Facet queries
@@ -271,16 +270,14 @@ public class SearchContent extends RestTest {
 	}
 
 	private SearchSqlRequest buildSqlSearchRequest() {
-		
+
 		SearchSqlRequest searchRequest = new SearchSqlRequest();
 
 		searchRequest.setSql(searchQuery);
 		searchRequest.setFormat(format);
 		searchRequest.setIncludeMetadata(includeMetadata);
-		// locales
 		searchRequest.setTimezone(timezone);
 
 		return searchRequest;
 	}
-
 }

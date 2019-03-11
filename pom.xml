@@ -3,7 +3,6 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-
     <parent>
         <groupId>org.alfresco</groupId>
         <artifactId>alfresco-super-pom</artifactId>
@@ -11,7 +10,7 @@
     </parent>
 
     <artifactId>alfresco-bm-rest-api</artifactId>
-    <version>3.0.1patched-SNAPSHOT</version>
+    <version>3.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -41,7 +40,7 @@
         <dependency>
             <groupId>org.alfresco</groupId>
             <artifactId>alfresco-bm-manager</artifactId>
-            <version>3.0.3patched2</version>
+            <version>${dependency.server.version}</version>
             <classifier>classes</classifier>
         </dependency>
         <dependency>
@@ -68,7 +67,7 @@
         <dependency>
             <groupId>org.alfresco.tas</groupId>
             <artifactId>restapi-test</artifactId>
-            <version>5.2.0.14</version>
+            <version>5.2.0.12</version>
         </dependency>
 
         <dependency>
