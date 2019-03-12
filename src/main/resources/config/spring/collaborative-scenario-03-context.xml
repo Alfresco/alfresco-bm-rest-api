@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <!-- Scenario section 3: Search simple documents first --> 
+   
+   <bean id="rest-collab.eventWeight.scenario03" class="org.alfresco.bm.rest.CustomSearchEventWeight">
+        <constructor-arg name="eventName" value="rest-collab.scenario.03.search" />
+        <constructor-arg name="weights" value="${weight.search}, ${weight.search}" />
+        <property name="searchType" value="${weight.searchType}" />
+   </bean>
+    
+   <bean id="event.rest-collab.scenario.03.search" class="org.alfresco.bm.rest.SearchContent" parent="event.base.rest.api" >
+        <property name="eventSearchContent" value="rest-collab.scenario.03.done" />
+        <property name="userDataService" ref="userDataService" />
+        <property name="searchQuery" value="${details.search.searchquery}" />
+        <property name="searchType" value="${weight.searchType}" />
+        <property name="searchLanguage" value="${details.search.language}" />
+        <property name="maxItems" value="${details.search.paging.maxItems}" />
+        <property name="skipCount" value="${details.search.paging.skipCount}" />
+        
+        <property name="rangeField" value="${details.search.range.field}" />
+        <property name="rangeStart" value="${details.search.range.start}" />
+        <property name="rangeStop" value="${details.search.range.stop}" />
+        <property name="rangeGap" value="${details.search.range.gap}" />
+        <property name="rangeHardend" value="${details.search.range.hardend}" />
+        
+        <property name="facetQueries" value="${details.search.facetQueries}" />
+   </bean>
+  
+  <bean id="producer.rest-collab.scenario.03.done" class="org.alfresco.bm.driver.event.producer.TerminateEventProducer" parent="producer.base" />
+  
+</beans>

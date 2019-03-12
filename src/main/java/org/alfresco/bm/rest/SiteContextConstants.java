@@ -36,4 +36,12 @@ public interface SiteContextConstants
     public static final String SITE_MEMBER = "siteMember";
     
     public static final String NODE_ID = "nodeId";
+
+	public static final String EVENT_SEARCH_SERVICES = "rest-collab.scenario.03.search";
+
+	public static final String EVENT_INSIGHT_ENGINE = "rest-collab.scenario.04.search";
+
+	public static final String SEARCH_SERVICES_SEARCH_TYPE = "Search Services Search";
+
+	public static final String INSIGHT_ENGINE_SEARCH_TYPE = "Insight Engine Search";
 }
